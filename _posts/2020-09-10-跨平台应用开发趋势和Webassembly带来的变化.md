@@ -130,11 +130,13 @@ Flutter Web 使用Webassembly编译	过的Skia图形引擎实现了在web浏览�
 
 随着W3C在2019年底正式标准化了Webassembly，在四大浏览器全部支持，Webassembly成为浏览器内一个新的跨平台计算平台，基于Webassemly开发的Universal App可以满足很多急迫的需求。
 
- 1.	提供一个基于开放互联网模式的新的应用分发方式，可以绕过app store对分发的垄断，建立自己新的应用分发方式。
+
+ 1．提供一个基于开放互联网模式的新的应用分发方式，可以绕过app store对分发的垄断，建立自己新的应用分发方式。
  2.	受制于性能限制而无法互联网化的桌面应用，借助Webassembly提供的原生应用运行能力，做SaaS商业模式和协同工作模式。2005年因为ajax技术的进步，出现过一次协同工作的生产力工具创新的热潮，出现了gmail，google wave，wordly等产品，google通过一系列并购形成了google doc产品族，和Microsoft office形成竞争，google doc虽然性能不如桌面版的office，但是其subscription的商业模式，协同办公的能力，帮助其赢得了大量的市场，例如整个学校教育系统。Webassembly的出现也会助力desktop应用向SaaS方式和协同工作的迁移。
  3.	在Android和iOS平台，除了原生应用框架之外，为了支撑浏览器，游戏这类依赖于bare metal原生计算能力的应用，也提供了一个直接访问底层硬件和图形能力的口子，flutter这样的新的应用”OS”才可以“寄生“在Andriod和iOS平台，逐渐演化，而不需要一开始就直接推Fuchsia平台。Webassembly在浏览器内提供了类似的bare metal计算方式，提供和Android和iOS一样的底层访问能力，例如：WebGL/WebGPU，Camera和USB等硬件设备，文件存储能力，同时支持多语言编程，这点又高于Android和iOS，加上基于web的开放访问模式，不被app store限制，所以是一种更适合应用”OS”创新的环境。
 
 现实世界已经出现了不少基于webassembly的web应用，是上述对Webassembly提供的新跨平台解决方案的能力的一个验证。
+
  1.	游戏类，因为游戏越来越依赖虚拟道具资产等应用内购收费，这也是和apple，google 应用商店产生冲突的原因，因为30%的过路费太过昂贵，而游戏本身并没有太多借助store的营销能力，好的游戏IP是稀缺内容，不需要store的营销。游戏引擎因为要支持游戏机，PC和移动设备，本身已经具备跨平台能力，游戏引擎有大量C++代码资产，rust也成为游戏底层平台的热门选择，这两种语言是webassembly首选语言，而且游戏依赖于GPU渲染，而浏览器内提供几乎没有损耗的WebGL和WebGPU访问通道。基于上述原因，游戏类应用有很强的商业动机和技术成熟度向Webassembly迁移。
  2.	XR类应用，同上述原因，AR/VR应用开发目前高度依赖游戏引擎，商业模式上，AR/VR最有前景的商业也是虚拟物品交易，如前文分析，Unity等商业游戏引擎并不很好支持AR/VR应用的开放世界和多人交互的场景，从发展前景上来讲，AR/VR被视为下一代终端，各大公司不希望自己的技术平台和用户被Unity这样的商业引擎绑定。从Webassembly社区来看基于C++的渲染引擎和物理引擎都已经完成了Webassembly的迁移，面向开发者的框架，例如Babylonjs等也发展很快。Mozilla专门推出了基于其servo浏览器技术的Firefox Reality WebXR浏览器，试图在AR/VR这个新计算平台布局成为新的OS。
  3.	对图形引擎和媒体能力要求比较高的业务，例如：地图导航类，媒体播放类，短视频社交类，实时通信类，通过Webassembly对其C++代码和媒体编解码能力的支持，可以在web平台获得和原生平台类似的性能。因为地缘政治的冲突，这类通过应用通过app store分被分割为碎片化的区域市场，通过web方式变为互联网网站，无论刚从政策和技术上都要比app模式更加难以被阻止访问。例如Google Earth团队已经发布了一个webassembly版本，和原生应用相差无几。ZOOM的web客户端已经使用基于Webassembly的编解码器和WebRTC实现了高质量的音视频通信。
@@ -146,6 +148,7 @@ Flutter Web 使用Webassembly编译	过的Skia图形引擎实现了在web浏览�
 
 
 如上述跨平台的Universal App框架的分析，编程语言的性能和语言的相互集成能力是限制应用性能的重要因素。Webassembly带来的变化可以总结如下
+
  1.	允许应用框架使用不同的语言来解决不同性质的问题。例如：面向开发者的语言，例如组件描述，更强调对组件的准确描述和用户快速的上手能力。用户逻辑，可能涉及计算性能或者AI能力，需要能够很容易支持调用既有的计算库模块，甚至是异构计算能力，比如python开发的ML库，而图形渲染管线，涉及对内存和多进程并发的处理，可能更适合C++，RUST或Go这样的语言处理。通过Webassembly，应用框架具备了整合不同代码资产，允许用户使用不同的语言解决不同的问题，这是一个很大的突破。随着多线程，SIMD指令，动态链接等能力逐渐进入Webassembly， 高性能语言编译为Webassembly的性能损失会更小，这种优势越明显。
  2.	Webassembly Interface Type标准化了不同语言编译为WASM模块之后相互集成的数据相互调用标准，也允许不同语言的runtime调用WASM模组，框架可以有一个主要编程语言，例如：Java或Swift，但是通过WASI标准，可以调用WASM模块，进而可以使用大量的存量软件资产，目前语言之间的相互调用是通过各种私有接口实现的，例如：JNI。
  3.	WASI还在标准化WASM模块调用系统能力的API，和WASM模块之间集成的安全标准，基于WASI，Webassembly不仅可以运行在浏览器之内，也能通过non-web WASM runtime之间运行在OS之上，而在不同的运行环境，WASM模块都可以通过统一的WASI API访问系统能力。而WASI所带来的WASM之间集成的minimum authority安全接口，可以大幅度改进目前基于编程语言模块调用的安全问题。
